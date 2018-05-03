@@ -1,0 +1,24 @@
+{
+  "name": "notes",
+  "version": "1.0.0",
+  "description": "DevDays",
+  "main": "index.js",
+  "dependencies": {
+    "static-server": "^2.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "static"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandraOlegovna/DevDaysApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexandraOlegovna/DevDaysApp/issues"
+  },
+  "homepage": "https://github.com/AlexandraOlegovna/DevDaysApp#readme"
+}

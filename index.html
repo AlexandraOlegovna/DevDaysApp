@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Notes</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+        <div class="history">
+
+          <div v-for="slide in slides.slice().reverse()" :data-time="show(slide.time)">{{slide.num}}</div>
+        </div>
+
+        <div class="number"> {{this.globalNumber}} </div>
+        <div class="time">{{this.now}}</div>
+
+        <div class="buttons">
+          <button><i class="fas fa-undo"></i></button>
+          <button v-on:click=prev><i class="fas fa-step-backward"></i></button>
+          <button v-on:click=next><i class="fas fa-step-forward"></i></button>
+        </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                globalNumber: 0,
+                slides: [],
+                currentTime: "",
+                now : new Date(),
+            },
+            created() {
+                setInterval(() => this.now = showTime(new Date), 1000)
+            },
+            methods: {
+                next: function(){
+                    this.slides.push({
+                        num: this.globalNumber++,
+                        time: new Date()
+                    })
+                },
+                prev: function(){
+                    if (this.globalNumber > 0) this.globalNumber--
+                    this.slides.pop()
+                },
+                show: function(day) {
+                    return showTime(day)
+                }
+            }
+        })
+
+
+        function showTime(day) {
+            function checkTime(i) {
+                if (i < 10) {i = "0" + i}; return i;
+            }
+
+            var h = day.getHours()
+            var m = day.getMinutes()
+            var s = day.getSeconds()
+            m = checkTime(m)
+            s = checkTime(s)
+            return h + ":" + m + ":" + s
+        }
+
+        // Vue.component('item', {
+        //   template: '#item-template',
+        //   props: {
+        //     model: Object
+        //   },
+        //   data: {
+        //
+        //   },
+        //   computed: {
+        //   },
+        //   methods: {
+        //   }
+        // })
+
+
+    </script>
+</body>
+</html>
