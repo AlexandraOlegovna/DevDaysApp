@@ -37,8 +37,8 @@
                 <button v-on:click=downloadJSON class="modal-default-button">
                   <i class="fas fa-download"></i>
                 </button>
-                <button class="modal-default-button">
-                  <i class="fas fa-cloud-upload-alt"></i>
+                <button v-on:click=toServer class="modal-default-button">
+                  <i id="serverButton" class="fas fa-cloud-upload-alt"></i>
                 </button>
             </div>
             </div>
@@ -87,23 +87,29 @@
             methods: {
                 downloadJSON: function() {
 
-                    // var a = document.getElementById("downloadJSON")
-                    // console.log(a)
-                    // var data = new Blob([json], {'type':'application/octet-stream'})
-                    // a.href = URL.createObjectURL(data)
-
-
-
-
                     json = JSON.stringify(this.$root.slides)
-                    blob = new Blob([json], { type: 'application/json' }),
-                    anchor = document.createElement('a');
+                    blob = new Blob([json], { type: 'application/json' })
+                    anchor = document.createElement('a')
 
-                    anchor.download = "labels.json";
-                    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-                    anchor.dataset.downloadurl = ['application/json', anchor.download, anchor.href].join(':');
-                    anchor.click();
+                    anchor.download = "labels.json"
+                    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob)
+                    anchor.dataset.downloadurl = ['application/json', anchor.download, anchor.href].join(':')
+                    anchor.click()
+                },
+
+                toServer : function () {
+                    var b = document.getElementById("serverButton")
+                    var icon = document.createElement("i")
+                    icon.classList.add("fas")
+                    icon.classList.add("fa-check")
+                    // <i class=\"fas fa-check\"></i>
+
+                    b.replaceWith(icon)
+                    console.log(icon)
+                    console.log(b)
                 }
+
+
             }
         })
 
