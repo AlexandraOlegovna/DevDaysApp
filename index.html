@@ -8,7 +8,54 @@
 <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>
 <body>
-    <div id="app">
+
+    <script type="text/x-template" id="modal-template">
+      <transition name="modal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+              <button class="modal-default-button" @click="$emit('close')">
+                Start Lection
+              </button>
+          </div>
+        </div>
+      </transition>
+  </script>
+
+
+  <script type="text/x-template" id="modal-template-finish">
+      <transition name="modalfinish">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                <span>
+                    Labels was successfully created!
+                    <br><br>
+                    You can download them <br> or send to the server
+                </span>
+                <br>
+                <div class="buttons">
+                <button v-on:click=downloadJSON class="modal-default-button">
+                  <i class="fas fa-download"></i>
+                </button>
+                <button class="modal-default-button">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </button>
+            </div>
+            </div>
+            </div>
+          </div>
+        </transition>
+    </script>
+
+
+
+    <div v-cloak id="app">
+
+        <!-- <button id="show-modal" @click="showModal = true">Show Modal</button> -->
+        <modal v-if="showModal" @close="showModal = false"> </modal>
+        <modalfinish v-if="showModalFinish"> </modalfinish>
+
+
         <div class="container">
         <div class="history">
 
@@ -19,17 +66,47 @@
         <div class="time">{{this.now}}</div>
 
         <div class="buttons">
-          <button><i class="fas fa-undo"></i></button>
           <button v-on:click=prev><i class="fas fa-step-backward"></i></button>
           <button v-on:click=next><i class="fas fa-step-forward"></i></button>
         </div>
-
+        <button v-on:click="showModalFinish = true">Finish</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     <script>
+
+        Vue.component('modal', {
+            template: '#modal-template'
+        })
+
+        Vue.component('modalfinish', {
+            template: '#modal-template-finish',
+
+            methods: {
+                downloadJSON: function() {
+
+                    // var a = document.getElementById("downloadJSON")
+                    // console.log(a)
+                    // var data = new Blob([json], {'type':'application/octet-stream'})
+                    // a.href = URL.createObjectURL(data)
+
+
+
+
+                    json = JSON.stringify(this.$root.slides)
+                    blob = new Blob([json], { type: 'application/json' }),
+                    anchor = document.createElement('a');
+
+                    anchor.download = "labels.json";
+                    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+                    anchor.dataset.downloadurl = ['application/json', anchor.download, anchor.href].join(':');
+                    anchor.click();
+                }
+            }
+        })
+
         new Vue({
             el: '#app',
             data: {
@@ -37,6 +114,8 @@
                 slides: [],
                 currentTime: "",
                 now : new Date(),
+                showModal: true,
+                showModalFinish: false
             },
             created() {
                 setInterval(() => this.now = showTime(new Date), 1000)
@@ -58,7 +137,6 @@
             }
         })
 
-
         function showTime(day) {
             function checkTime(i) {
                 if (i < 10) {i = "0" + i}; return i;
@@ -71,21 +149,6 @@
             s = checkTime(s)
             return h + ":" + m + ":" + s
         }
-
-        // Vue.component('item', {
-        //   template: '#item-template',
-        //   props: {
-        //     model: Object
-        //   },
-        //   data: {
-        //
-        //   },
-        //   computed: {
-        //   },
-        //   methods: {
-        //   }
-        // })
-
 
     </script>
 </body>
