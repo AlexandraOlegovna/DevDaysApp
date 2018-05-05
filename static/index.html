@@ -52,7 +52,7 @@
     <div v-cloak id="app">
 
         <!-- <button id="show-modal" @click="showModal = true">Show Modal</button> -->
-        <modal v-if="showModal" @close="showModal = false"> </modal>
+        <modal v-if="showModal" @close="showModal = false; startTime = new Date()"> </modal>
         <modalfinish v-if="showModalFinish"> </modalfinish>
 
 
@@ -69,10 +69,11 @@
           <button v-on:click=prev><i class="fas fa-step-backward"></i></button>
           <button v-on:click=next><i class="fas fa-step-forward"></i></button>
         </div>
-        <button v-on:click="showModalFinish = true">Finish</button>
+        <button v-on:click="showModalFinish = true; finishTime = new Date()">Finish</button>
         </div>
     </div>
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
     <script>
@@ -87,7 +88,11 @@
             methods: {
                 downloadJSON: function() {
 
-                    json = JSON.stringify(this.$root.slides)
+                    json = JSON.stringify({
+                        startTime:  this.$root.startTime,
+                        finishTime: this.$root.finishTime,
+                        slides:     this.$root.slides
+                    })
                     blob = new Blob([json], { type: 'application/json' })
                     anchor = document.createElement('a')
 
@@ -98,18 +103,18 @@
                 },
 
                 toServer : function () {
+                    axios.post('/send', {
+                        startTime:  this.$root.startTime,
+                        finishTime: this.$root.finishTime,
+                        slides:     this.$root.slides
+                    });
+                    
                     var b = document.getElementById("serverButton")
                     var icon = document.createElement("i")
                     icon.classList.add("fas")
                     icon.classList.add("fa-check")
-                    // <i class=\"fas fa-check\"></i>
-
                     b.replaceWith(icon)
-                    console.log(icon)
-                    console.log(b)
                 }
-
-
             }
         })
 
@@ -121,7 +126,9 @@
                 currentTime: "",
                 now : new Date(),
                 showModal: true,
-                showModalFinish: false
+                showModalFinish: false,
+                startTime: 0,
+                finishTime: 0
             },
             created() {
                 setInterval(() => this.now = showTime(new Date), 1000)
